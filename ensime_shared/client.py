@@ -248,9 +248,13 @@ class EnsimeClient(TypecheckHandler, DebuggerClient, ProtocolHandler):
     def send_at_position(self, what, where="range"):
         self.log.debug('send_at_position: in')
         b, e = self.editor.start_end_pos()
-        bcol, ecol = b[1], e[1]
-        s, line = ecol - bcol, b[0]
-        self.send_at_point_req(what, self.editor.path(), line, bcol + 1, s, where)
+        self.send_at_point_req(what, self.editor.path(), b[0], b[1], e[0], e[1], where)
+
+    def send_at_range(self, what, where="range"):
+        print("from send_at_range")
+        self.log.debug('send_at_range: in')
+        b, e = self.editor.start_end_pos()
+        self.send_at_point_req(what, self.editor.path(), b[0], b[1], e[0], e[1], where)
 
     # TODO: Should these be in Editor? They're translating to/from ENSIME's
     # coordinate scheme so it's debatable.
@@ -307,13 +311,14 @@ class EnsimeClient(TypecheckHandler, DebuggerClient, ProtocolHandler):
                            "fileInfo": self._file_info(),
                            "reload": False})
 
-    def send_at_point_req(self, what, path, row, col, size, where="range"):
+    def send_at_point_req(self, what, path, brow, bcol, erow, ecol, where="range"):
         """Ask the server to perform an operation at a given position."""
-        i = self.get_position(row, col)
+        start = self.get_position(brow, bcol)
+        end = self.get_position(erow, ecol)
         self.send_request(
             {"typehint": what + "AtPointReq",
              "file": path,
-             where: {"from": i, "to": i + size}})
+             where: {"from": start, "to": end}})
 
     def do_toggle_teardown(self, args, range=None):
         self.log.debug('do_toggle_teardown: in')
@@ -339,6 +344,10 @@ class EnsimeClient(TypecheckHandler, DebuggerClient, ProtocolHandler):
 
     def type(self, args, range=None):
         self.log.debug('type: in')
+        self.send_at_position("Type")
+
+    def type_on_selection(self, args, range=None):
+        self.log.debug('type_on_selection: in')
         self.send_at_position("Type")
 
     def toggle_fulltype(self, args, range=None):
@@ -544,6 +553,8 @@ class EnsimeClient(TypecheckHandler, DebuggerClient, ProtocolHandler):
 
     def send_request(self, request):
         """Send a request to the server."""
+        print("This is the request")
+        print(request)
         self.log.debug('send_request: in')
 
         message = {'callId': self.call_id, 'req': request}

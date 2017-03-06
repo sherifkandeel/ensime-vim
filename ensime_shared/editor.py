@@ -40,6 +40,7 @@ class Editor(object):
     # TODO: make this read-only property-like?
     def current_word(self):
         """Get the current word under the cursor."""
+        print("Getting current word")
         return self._vim.eval('expand("<cword>")')
 
     def doautocmd(self, *autocmds):
@@ -238,7 +239,14 @@ class Editor(object):
         end = self.cursor()
         self._vim.command('normal b')
         beg = self.cursor()
+        print("oh-HEREEEEEEEEEEEEEEEEE")
+        print(beg, end)
         return beg, end
+
+    # def start_end_selection(self):
+        # bln, bcol, eln, ecol = self._vim.command('get_visual_selection()')
+        # print(beg, end)
+        # return beg, end
 
     def path(self):
         """Return the current path."""
