@@ -243,10 +243,13 @@ class Editor(object):
         print(beg, end)
         return beg, end
 
-    # def start_end_selection(self):
-        # bln, bcol, eln, ecol = self._vim.command('get_visual_selection()')
-        # print(beg, end)
-        # return beg, end
+    def start_end_selection(self):
+        print ("went to editor")
+        blnum, bcolnum, elnum, ecolnum = self._vim.eval('s:get_visual_selection()')
+        beg = (int(blnum), int(bcolnum))
+        end = (int(elnum), int(ecolnum))
+        print(beg, end)
+        return beg, end
 
     def path(self):
         """Return the current path."""

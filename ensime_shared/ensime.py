@@ -160,6 +160,10 @@ class Ensime(object):
         client.type(None)
 
     @execute_with_client()
+    def com_en_type_on_selection(self, client, args, range=None):
+        client.type_on_selection(None)
+
+    @execute_with_client()
     def com_en_toggle_fulltype(self, client, args, range=None):
         client.toggle_fulltype(None)
 

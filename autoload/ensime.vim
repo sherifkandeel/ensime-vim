@@ -63,8 +63,8 @@ function! ensime#com_en_type(args, range) abort
     return s:call_plugin('com_en_type', [a:args, a:range])
 endfunction
 
-function! ensime#com_en_type_under_selection(args, range, value) abort
-    return s:call_plugin('com_en_type_under_selection', [a:args, a:range])
+function! ensime#com_en_type_on_selection(args, range) abort
+    return s:call_plugin('com_en_type_on_selection', [a:args, a:range])
 endfunction
 
 function! ensime#com_en_package_inspect(args, range) abort
@@ -159,6 +159,12 @@ function! ensime#com_en_clients(args, range) abort
     return s:call_plugin('com_en_clients', [a:args, a:range])
 endfunction
 
+function! s:get_visual_selection()
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  return [lnum1, col1, lnum2, col2]
+endfunction
+
 function! s:call_plugin(method_name, args) abort
     " TODO: support nvim rpc
     if has('nvim')
@@ -181,13 +187,6 @@ PY
     return res
 endfunction
 
-function! s:get_visual_selection()
-  let [lnum1, col1] = getpos("'<")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
-  " let lines = getline(lnum1, lnum2)
-  " let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
-  " let lines[0] = lines[0][col1 - 1:]
-  " return join(lines, "\n")
-  return [lnum1, col1, lnum2, col2]
-endfunction
+
 " vim:set et sw=4 ts=4 tw=78:
+" return join(lines, "\n")

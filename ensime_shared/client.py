@@ -251,9 +251,9 @@ class EnsimeClient(TypecheckHandler, DebuggerClient, ProtocolHandler):
         self.send_at_point_req(what, self.editor.path(), b[0], b[1], e[0], e[1], where)
 
     def send_at_range(self, what, where="range"):
-        print("from send_at_range")
+        print("went to send_at_range")
         self.log.debug('send_at_range: in')
-        b, e = self.editor.start_end_pos()
+        b, e = self.editor.start_end_selection()
         self.send_at_point_req(what, self.editor.path(), b[0], b[1], e[0], e[1], where)
 
     # TODO: Should these be in Editor? They're translating to/from ENSIME's
@@ -348,7 +348,7 @@ class EnsimeClient(TypecheckHandler, DebuggerClient, ProtocolHandler):
 
     def type_on_selection(self, args, range=None):
         self.log.debug('type_on_selection: in')
-        self.send_at_position("Type")
+        self.send_at_range("Type")
 
     def toggle_fulltype(self, args, range=None):
         self.log.debug('toggle_fulltype: in')
